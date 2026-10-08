@@ -1,7 +1,9 @@
 from flask import Flask, jsonify
-from database import get_db_connection
+from database import get_db_connection, init_db
 
 app = Flask(__name__)
+
+init_db()
 
 
 @app.route("/")
