@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from database import get_db_connection, init_db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -32,6 +33,7 @@ def register():
     email = data.get("email")
     contact = data.get("contact")
     password = data.get("password")
+    password_hash = generate_password_hash(password)
     role = data.get("role")
 
     connection = get_db_connection()
@@ -47,7 +49,7 @@ def register():
             name,
             email,
             contact,
-            password,
+            password_hash,
             role
         ))
 
@@ -83,12 +85,11 @@ def login():
     connection = get_db_connection()
 
     user = connection.execute("""
-        SELECT * FROM users
-        WHERE id_number = ? AND password_hash = ?
-    """, (
-        id_number,
-        password
-    )).fetchone()
+    SELECT * FROM users
+    WHERE id_number = ?
+""", (
+    id_number,
+)).fetchone()
 
     connection.close()
 
@@ -148,10 +149,6 @@ def create_record():
             "category": category
         }
     }), 201
-
-# =========================
-# GET RECORDS
-# =========================
 
 # =========================
 # GET RECORDS WITH SEARCH
