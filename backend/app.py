@@ -149,6 +149,35 @@ def create_record():
         }
     }), 201
 
+# =========================
+# GET RECORDS
+# =========================
+
+@app.route("/api/records", methods=["GET"])
+def get_records():
+
+    connection = get_db_connection()
+
+    records = connection.execute("""
+        SELECT * FROM records
+    """).fetchall()
+
+    connection.close()
+
+    record_list = []
+
+    for record in records:
+
+        record_list.append({
+            "id": record["id"],
+            "name": record["name"],
+            "description": record["description"],
+            "category": record["category"]
+        })
+
+    return jsonify({
+        "records": record_list
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
