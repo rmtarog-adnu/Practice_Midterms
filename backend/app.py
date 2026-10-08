@@ -54,14 +54,22 @@ def register():
     email = data.get("email")
     contact = data.get("contact")
     password = data.get("password")
-    password_hash = generate_password_hash(password)
     role = data.get("role")
+
+    # Validate required fields BEFORE hashing
+    if not id_number or not name or not email or not password or not role:
+        return jsonify({
+            "error": "Required fields are missing."
+        }), 400
+
+    # Hash password after validation
+    password_hash = generate_password_hash(password)
 
     connection = get_db_connection()
 
     try:
 
-        connection.execute("""
+        cursor = connection.execute("""
             INSERT INTO users
             (id_number, name, email, contact, password_hash, role)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -76,19 +84,19 @@ def register():
 
         connection.commit()
 
-        return jsonify({
-            "message": "Registration successful."
-        }), 201
-
     except Exception as error:
+
+        connection.close()
 
         return jsonify({
             "error": str(error)
         }), 400
 
-    finally:
+    connection.close()
 
-        connection.close()
+    return jsonify({
+        "message": "Registration successful."
+    }), 201
 
 
 # =========================
@@ -144,6 +152,11 @@ def create_record():
     description = data.get("description")
     category = data.get("category")
 
+    if not name:
+        return jsonify({
+        "error": "Name is required."
+    }), 400
+
     connection = get_db_connection()
 
     cursor = connection.execute("""
@@ -176,48 +189,6 @@ def create_record():
 # GET RECORDS WITH SEARCH
 # =========================
 
-@app.route("/api/records", methods=["GET"])
-def get_records():
-
-    search = request.args.get("search", "").strip()
-
-    connection = get_db_connection()
-
-    if search:
-
-        records = connection.execute("""
-            SELECT * FROM records
-            WHERE name LIKE ?
-               OR description LIKE ?
-               OR category LIKE ?
-        """, (
-            f"%{search}%",
-            f"%{search}%",
-            f"%{search}%"
-        )).fetchall()
-
-    else:
-
-        records = connection.execute("""
-            SELECT * FROM records
-        """).fetchall()
-
-    connection.close()
-
-    record_list = []
-
-    for record in records:
-
-        record_list.append({
-            "id": record["id"],
-            "name": record["name"],
-            "description": record["description"],
-            "category": record["category"]
-        })
-
-    return jsonify({
-        "records": record_list
-    })
 
 if __name__ == "__main__":
     app.run(debug=True)
