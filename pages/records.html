@@ -1,37 +1,125 @@
-<!DOCTYPE html> 
-<html lang="en"> 
-    <head> 
-        <meta charset="UTF-8"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-        <title>Records</title> 
-        <link rel="stylesheet" href="../css/style.css"> 
-    </head> 
-        <body> 
-            <nav class="navbar"> 
-                <div class="logo"> Mini Management System </div> 
-                <div class="nav-links"> 
-                    <a href="../index.html">Home</a> 
-                    <a href="dashboard.html">Dashboard</a> 
-                    <a href="records.html">Records</a> 
-                    <a href="login.html">Login</a> 
-                </div> </nav> 
-                <main class="form-container"> 
-                    <h1>Add Record</h1> 
-                    <form id="recordForm"> 
-                        <div class="form-group"> 
-                            <label for="name">Name</label> 
-                            <input type="text" id="name" name="name" placeholder="Enter name" required > 
-                        </div> <div class="form-group"> <label for="description">Description</label> 
-                            <textarea id="description" name="description" placeholder="Enter description" rows="4" required >
-                            </textarea> 
-                        </div> 
-                        <div class="form-group"> 
-                            <label for="category">Category</label>
-                            <input type="text" id="category" name="category" placeholder="Enter category" required > 
-                        </div> 
-                        <button type="submit"> Add Record 
-                        </button> 
-                    </form> 
-                </main> 
-            </body> 
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Records</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Mini Management System
+        </div>
+
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="records.html">Records</a>
+            <a href="login.html">Login</a>
+        </div>
+
+    </nav>
+
+    <main class="form-container">
+
+        <h1>Add Record</h1>
+
+        <form id="recordForm">
+
+            <div class="form-group">
+                <label for="name">Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Enter description"
+                    rows="4"
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+
+                <input
+                    type="text"
+                    id="category"
+                    name="category"
+                    placeholder="Enter category"
+                    required
+                >
+            </div>
+
+            <button type="submit">
+                Add Record
+            </button>
+
+        </form>
+
+        <section class="records-section">
+
+            <h2>Records</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>1</td>
+                            <td>Sample Record</td>
+                            <td>This is a sample record.</td>
+                            <td>Example</td>
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>Another Record</td>
+                            <td>This is another sample.</td>
+                            <td>Example</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
 </html>
+
