@@ -1,13 +1,65 @@
 console.log("Mini Management System loaded.");
 
+// =========================
+// ADD RECORD
+// =========================
+
+const recordForm = document.getElementById("recordForm");
+
+if (recordForm) {
+
+    recordForm.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const description = document.getElementById("description").value;
+        const category = document.getElementById("category").value;
+
+        const tableBody = document.querySelector("tbody");
+
+        const newRow = document.createElement("tr");
+
+        const newId = tableBody.rows.length + 1;
+
+        newRow.innerHTML = `
+            <td>${newId}</td>
+            <td>${name}</td>
+            <td>${description}</td>
+            <td>${category}</td>
+            <td>
+                <button type="button" class="edit-btn">
+                    Edit
+                </button>
+            </td>
+        `;
+
+        tableBody.appendChild(newRow);
+
+        // Make the new Edit button work
+        setupEditButton(newRow.querySelector(".edit-btn"));
+
+        // Clear the form
+        recordForm.reset();
+
+    });
+
+}
+
+
+// =========================
+// SEARCH RECORDS
+// =========================
 
 const searchInput = document.getElementById("searchInput");
-const tableRows = document.querySelectorAll("tbody tr");
 
 if (searchInput) {
+
     searchInput.addEventListener("input", function () {
 
         const searchValue = searchInput.value.toLowerCase();
+
+        const tableRows = document.querySelectorAll("tbody tr");
 
         tableRows.forEach(function (row) {
 
@@ -22,5 +74,92 @@ if (searchInput) {
         });
 
     });
+
 }
 
+
+// =========================
+// EDIT RECORD
+// =========================
+
+const editModal = document.getElementById("editModal");
+const editForm = document.getElementById("editForm");
+const cancelEdit = document.getElementById("cancelEdit");
+
+
+// Function for Edit buttons
+function setupEditButton(button) {
+
+    if (!button) {
+        return;
+    }
+
+    button.addEventListener("click", function () {
+
+        const row = button.closest("tr");
+
+        document.getElementById("editName").value =
+            row.cells[1].textContent.trim();
+
+        document.getElementById("editDescription").value =
+            row.cells[2].textContent.trim();
+
+        document.getElementById("editCategory").value =
+            row.cells[3].textContent.trim();
+
+        editModal.style.display = "block";
+
+        editForm.dataset.rowIndex = row.rowIndex;
+
+    });
+
+}
+
+
+// Setup existing Edit buttons
+if (editModal && editForm) {
+
+    const editButtons = document.querySelectorAll(".edit-btn");
+
+    editButtons.forEach(function (button) {
+        setupEditButton(button);
+    });
+
+
+    // Cancel Edit
+    if (cancelEdit) {
+
+        cancelEdit.addEventListener("click", function () {
+
+            editModal.style.display = "none";
+
+        });
+
+    }
+
+
+    // Save Changes
+    editForm.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        const rowIndex = editForm.dataset.rowIndex;
+
+        const tableBody = document.querySelector("tbody");
+
+        const row = tableBody.rows[rowIndex - 1];
+
+        row.cells[1].textContent =
+            document.getElementById("editName").value;
+
+        row.cells[2].textContent =
+            document.getElementById("editDescription").value;
+
+        row.cells[3].textContent =
+            document.getElementById("editCategory").value;
+
+        editModal.style.display = "none";
+
+    });
+
+}

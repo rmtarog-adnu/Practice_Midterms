@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,6 +29,7 @@
 
     <main class="form-container">
 
+        <!-- Add Record -->
         <h1>Add Record</h1>
 
         <form id="recordForm">
@@ -76,49 +76,92 @@
 
         </form>
 
+
+        <!-- Records -->
         <section class="records-section">
 
             <h2>Records</h2>
 
+            <!-- Search -->
             <div class="search-container">
 
-    <label for="searchInput">Search Records</label>
+                <label for="searchInput">
+                    Search Records
+                </label>
 
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="Search records..."
-    >
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search records..."
+                >
 
-</div>
+            </div>
 
+
+            <!-- Records Table -->
             <div class="table-container">
 
                 <table>
 
                     <thead>
+
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
                             <th>Description</th>
                             <th>Category</th>
+                            <th>Actions</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
 
                         <tr>
+
                             <td>1</td>
+
                             <td>Sample Record</td>
-                            <td>This is a sample record.</td>
+
+                            <td>
+                                This is a sample record.
+                            </td>
+
                             <td>Example</td>
+
+                            <td>
+                                <button
+                                    type="button"
+                                    class="edit-btn"
+                                >
+                                    Edit
+                                </button>
+                            </td>
+
                         </tr>
 
+
                         <tr>
+
                             <td>2</td>
+
                             <td>Another Record</td>
-                            <td>This is another sample.</td>
+
+                            <td>
+                                This is another sample.
+                            </td>
+
                             <td>Example</td>
+
+                            <td>
+                                <button
+                                    type="button"
+                                    class="edit-btn"
+                                >
+                                    Edit
+                                </button>
+                            </td>
+
                         </tr>
 
                     </tbody>
@@ -128,6 +171,78 @@
             </div>
 
         </section>
+
+
+        <!-- Edit Record Modal -->
+        <div id="editModal" class="modal">
+
+            <div class="modal-content">
+
+                <h2>Edit Record</h2>
+
+                <form id="editForm">
+
+                    <div class="form-group">
+
+                        <label for="editName">
+                            Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editName"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="editDescription">
+                            Description
+                        </label>
+
+                        <textarea
+                            id="editDescription"
+                            rows="4"
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="editCategory">
+                            Category
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editCategory"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button type="submit">
+                        Save Changes
+                    </button>
+
+                    <button
+                        type="button"
+                        id="cancelEdit"
+                    >
+                        Cancel
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
 
     </main>
 
