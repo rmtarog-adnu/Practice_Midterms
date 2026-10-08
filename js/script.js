@@ -206,3 +206,43 @@ const deleteButtons = document.querySelectorAll(".delete-btn");
 deleteButtons.forEach(function (button) {
     setupDeleteButton(button);
 });
+
+// =========================
+// FILTER RECORDS
+// =========================
+
+const categoryFilter = document.getElementById("categoryFilter");
+
+if (categoryFilter) {
+
+    categoryFilter.addEventListener("change", function () {
+
+        const selectedCategory =
+            categoryFilter.value.toLowerCase();
+
+        const tableRows =
+            document.querySelectorAll("tbody tr");
+
+        tableRows.forEach(function (row) {
+
+            const category =
+                row.cells[3].textContent.toLowerCase().trim();
+
+            if (
+                selectedCategory === "all" ||
+                category === selectedCategory
+            ) {
+
+                row.style.display = "";
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+    });
+
+}
