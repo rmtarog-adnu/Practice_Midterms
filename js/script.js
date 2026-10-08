@@ -23,21 +23,26 @@ if (recordForm) {
         const newId = tableBody.rows.length + 1;
 
         newRow.innerHTML = `
-            <td>${newId}</td>
-            <td>${name}</td>
-            <td>${description}</td>
-            <td>${category}</td>
-            <td>
-                <button type="button" class="edit-btn">
-                    Edit
-                </button>
-            </td>
-        `;
+    <td>${newId}</td>
+    <td>${name}</td>
+    <td>${description}</td>
+    <td>${category}</td>
+    <td>
+        <button type="button" class="edit-btn">
+            Edit
+        </button>
+
+        <button type="button" class="delete-btn">
+            Delete
+        </button>
+    </td>
+`;
 
         tableBody.appendChild(newRow);
 
         // Make the new Edit button work
         setupEditButton(newRow.querySelector(".edit-btn"));
+        setupDeleteButton(newRow.querySelector(".delete-btn"));
 
         // Clear the form
         recordForm.reset();
@@ -163,3 +168,41 @@ if (editModal && editForm) {
     });
 
 }
+
+// =========================
+// DELETE RECORD
+// =========================
+
+function setupDeleteButton(button) {
+
+    if (!button) {
+        return;
+    }
+
+    button.addEventListener("click", function () {
+
+        const row = button.closest("tr");
+
+        const recordName = row.cells[1].textContent;
+
+        const confirmDelete = confirm(
+            "Are you sure you want to delete " + recordName + "?"
+        );
+
+        if (confirmDelete) {
+
+            row.remove();
+
+        }
+
+    });
+
+}
+
+
+// Setup existing Delete buttons
+const deleteButtons = document.querySelectorAll(".delete-btn");
+
+deleteButtons.forEach(function (button) {
+    setupDeleteButton(button);
+});
