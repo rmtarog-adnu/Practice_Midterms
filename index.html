@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Mini Management System</title>
+    <title>Login</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -18,24 +19,56 @@
         </div>
 
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="pages/dashboard.html">Dashboard</a>
-            <a href="pages/records.html">Records</a>
+            <a href="../index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="records.html">Records</a>
         </div>
 
     </nav>
 
-    <main class="container">
+    <main class="form-container">
 
-        <h1>Welcome</h1>
+        <h1>Login</h1>
+
+        <form>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
 
         <p>
-            Welcome to the Mini Management System.
+            Don't have an account?
+            <a href="register.html">Register</a>
         </p>
 
     </main>
 
-    <script src="js/script.js"></script>
-
 </body>
+
 </html>
