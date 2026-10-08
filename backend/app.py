@@ -1,9 +1,19 @@
+import logging
+
 from flask import Flask, jsonify, request
 from database import get_db_connection, init_db
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
 app = Flask(__name__)
+
+logging.basicConfig(
+    filename="backend/app.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+logger = logging.getLogger(__name__)
 
 init_db()
 
@@ -117,6 +127,8 @@ def register():
 
     connection.close()
 
+    logger.info("User registered successfully: %s", id_number)
+
     return jsonify({
         "message": "Registration successful."
     }), 201
@@ -200,6 +212,8 @@ def create_record():
 
         connection.close()
 
+        logger.info("Record created successfully: ID %s", record_id)
+
         return jsonify({
             "message": "Record created successfully.",
             "record": {
@@ -267,6 +281,8 @@ def update_record(record_id):
 
         connection.commit()
 
+        logger.info("Record updated successfully: ID %s", record_id)
+
         connection.close()
 
         return jsonify({
@@ -318,6 +334,8 @@ def delete_record(record_id):
         """, (record_id,))
 
         connection.commit()
+
+        logger.info("Record deleted successfully: ID %s", record_id)
 
         connection.close()
 
