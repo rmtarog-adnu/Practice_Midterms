@@ -116,3 +116,35 @@ button {
     font-size: 30px;
     font-weight: bold;
 }
+
+@media (max-width: 768px) {
+
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+
+        padding: 15px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 10px;
+
+        text-align: center;
+    }
+
+    .container {
+        width: 90%;
+        padding: 20px 0;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .form-container {
+        width: 90%;
+        margin: 30px auto;
+    }
+
+}
