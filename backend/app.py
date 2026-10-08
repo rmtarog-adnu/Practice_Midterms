@@ -1,6 +1,3 @@
-from multiprocessing.dummy import connection
-from unicodedata import category
-
 from flask import Flask, jsonify, request
 from database import get_db_connection, init_db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -168,10 +165,6 @@ def login():
 # CREATE RECORD
 # =========================
 
-# =========================
-# CREATE RECORD
-# =========================
-
 @app.route("/api/records", methods=["POST"])
 @role_required("admin", "teacher")
 def create_record():
@@ -227,9 +220,131 @@ def create_record():
         }), 500
 
 # =========================
+# UPDATE RECORD
+# =========================
+
+@app.route("/api/records/<int:record_id>", methods=["PUT"])
+@role_required("admin", "teacher")
+def update_record(record_id):
+
+    data = request.get_json()
+
+    name = data.get("name")
+    description = data.get("description")
+    category = data.get("category")
+
+    if not name:
+        return jsonify({
+            "error": "Name is required."
+        }), 400
+
+    connection = get_db_connection()
+
+    try:
+
+        record = connection.execute("""
+            SELECT * FROM records
+            WHERE id = ?
+        """, (record_id,)).fetchone()
+
+        if not record:
+            connection.close()
+
+            return jsonify({
+                "error": "Record not found."
+            }), 404
+
+        connection.execute("""
+            UPDATE records
+            SET name = ?, description = ?, category = ?
+            WHERE id = ?
+        """, (
+            name,
+            description,
+            category,
+            record_id
+        ))
+
+        connection.commit()
+
+        connection.close()
+
+        return jsonify({
+            "message": "Record updated successfully.",
+            "record": {
+                "id": record_id,
+                "name": name,
+                "description": description,
+                "category": category
+            }
+        }), 200
+
+    except Exception as error:
+
+        connection.rollback()
+        connection.close()
+
+        return jsonify({
+            "error": "Failed to update record."
+        }), 500
+    
+# =========================
 # GET RECORDS WITH SEARCH
 # =========================
 
+@app.route("/api/records", methods=["GET"])
+@role_required("admin", "teacher", "student")
+def get_records():
+
+    search = request.args.get("search", "").strip()
+
+    connection = get_db_connection()
+
+    try:
+
+        if search:
+
+            records = connection.execute("""
+                SELECT * FROM records
+                WHERE name LIKE ?
+                   OR description LIKE ?
+                   OR category LIKE ?
+            """, (
+                f"%{search}%",
+                f"%{search}%",
+                f"%{search}%"
+            )).fetchall()
+
+        else:
+
+            records = connection.execute("""
+                SELECT * FROM records
+            """).fetchall()
+
+        connection.close()
+
+        record_list = []
+
+        for record in records:
+
+            record_list.append({
+                "id": record["id"],
+                "name": record["name"],
+                "description": record["description"],
+                "category": record["category"]
+            })
+
+        return jsonify({
+            "records": record_list
+        }), 200
+
+    except Exception as error:
+
+        connection.close()
+
+        return jsonify({
+            "error": "Failed to retrieve records."
+        }), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
