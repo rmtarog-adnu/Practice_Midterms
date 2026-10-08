@@ -108,6 +108,47 @@ def login():
         "error": "Invalid ID number or password."
     }), 401
 
+# =========================
+# CREATE RECORD
+# =========================
+
+@app.route("/api/records", methods=["POST"])
+def create_record():
+
+    data = request.get_json()
+
+    name = data.get("name")
+    description = data.get("description")
+    category = data.get("category")
+
+    connection = get_db_connection()
+
+    cursor = connection.execute("""
+        INSERT INTO records
+        (name, description, category)
+        VALUES (?, ?, ?)
+    """, (
+        name,
+        description,
+        category
+    ))
+
+    connection.commit()
+
+    record_id = cursor.lastrowid
+
+    connection.close()
+
+    return jsonify({
+        "message": "Record created successfully.",
+        "record": {
+            "id": record_id,
+            "name": name,
+            "description": description,
+            "category": category
+        }
+    }), 201
+
 
 if __name__ == "__main__":
     app.run(debug=True)
