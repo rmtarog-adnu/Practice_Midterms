@@ -1,3 +1,6 @@
+from multiprocessing.dummy import connection
+from unicodedata import category
+
 from flask import Flask, jsonify, request
 from database import get_db_connection, init_db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -27,6 +30,29 @@ def role_required(*allowed_roles):
         return wrapper
 
     return decorator
+
+@app.errorhandler(404)
+def not_found(error):
+
+    return jsonify({
+        "error": "Resource not found."
+    }), 404
+
+
+@app.errorhandler(405)
+def method_not_allowed(error):
+
+    return jsonify({
+        "error": "Method not allowed."
+    }), 405
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+
+    return jsonify({
+        "error": "Internal server error."
+    }), 500
 
 @app.route("/")
 def home():
@@ -142,6 +168,10 @@ def login():
 # CREATE RECORD
 # =========================
 
+# =========================
+# CREATE RECORD
+# =========================
+
 @app.route("/api/records", methods=["POST"])
 @role_required("admin", "teacher")
 def create_record():
@@ -154,36 +184,47 @@ def create_record():
 
     if not name:
         return jsonify({
-        "error": "Name is required."
-    }), 400
+            "error": "Name is required."
+        }), 400
 
     connection = get_db_connection()
 
-    cursor = connection.execute("""
-        INSERT INTO records
-        (name, description, category)
-        VALUES (?, ?, ?)
-    """, (
-        name,
-        description,
-        category
-    ))
+    try:
 
-    connection.commit()
+        cursor = connection.execute("""
+            INSERT INTO records
+            (name, description, category)
+            VALUES (?, ?, ?)
+        """, (
+            name,
+            description,
+            category
+        ))
 
-    record_id = cursor.lastrowid
+        connection.commit()
 
-    connection.close()
+        record_id = cursor.lastrowid
 
-    return jsonify({
-        "message": "Record created successfully.",
-        "record": {
-            "id": record_id,
-            "name": name,
-            "description": description,
-            "category": category
-        }
-    }), 201
+        connection.close()
+
+        return jsonify({
+            "message": "Record created successfully.",
+            "record": {
+                "id": record_id,
+                "name": name,
+                "description": description,
+                "category": category
+            }
+        }), 201
+
+    except Exception as error:
+
+        connection.rollback()
+        connection.close()
+
+        return jsonify({
+            "error": "Failed to create record."
+        }), 500
 
 # =========================
 # GET RECORDS WITH SEARCH
