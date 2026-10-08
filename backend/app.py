@@ -153,14 +153,35 @@ def create_record():
 # GET RECORDS
 # =========================
 
+# =========================
+# GET RECORDS WITH SEARCH
+# =========================
+
 @app.route("/api/records", methods=["GET"])
 def get_records():
 
+    search = request.args.get("search", "").strip()
+
     connection = get_db_connection()
 
-    records = connection.execute("""
-        SELECT * FROM records
-    """).fetchall()
+    if search:
+
+        records = connection.execute("""
+            SELECT * FROM records
+            WHERE name LIKE ?
+               OR description LIKE ?
+               OR category LIKE ?
+        """, (
+            f"%{search}%",
+            f"%{search}%",
+            f"%{search}%"
+        )).fetchall()
+
+    else:
+
+        records = connection.execute("""
+            SELECT * FROM records
+        """).fetchall()
 
     connection.close()
 
