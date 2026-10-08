@@ -246,3 +246,19 @@ if (categoryFilter) {
     });
 
 }
+
+// =========================
+// LOADING MESSAGE
+// =========================
+
+const loadingMessage = document.getElementById("loadingMessage");
+
+if (loadingMessage) {
+
+    setTimeout(function () {
+
+        loadingMessage.style.display = "none";
+
+    }, 1000);
+
+}
