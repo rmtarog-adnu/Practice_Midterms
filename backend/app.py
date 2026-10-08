@@ -1,11 +1,32 @@
 from flask import Flask, jsonify, request
 from database import get_db_connection, init_db
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 app = Flask(__name__)
 
 init_db()
 
+def role_required(*allowed_roles):
+
+    def decorator(function):
+
+        @wraps(function)
+        def wrapper(*args, **kwargs):
+
+            role = request.headers.get("Role")
+
+            if role not in allowed_roles:
+
+                return jsonify({
+                    "error": "Access denied."
+                }), 403
+
+            return function(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 @app.route("/")
 def home():
@@ -93,7 +114,7 @@ def login():
 
     connection.close()
 
-    if user:
+    if user and check_password_hash(user["password_hash"], password):
 
         return jsonify({
             "message": "Login successful.",
@@ -114,6 +135,7 @@ def login():
 # =========================
 
 @app.route("/api/records", methods=["POST"])
+@role_required("admin", "teacher")
 def create_record():
 
     data = request.get_json()
