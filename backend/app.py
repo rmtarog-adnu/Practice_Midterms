@@ -287,6 +287,52 @@ def update_record(record_id):
         return jsonify({
             "error": "Failed to update record."
         }), 500
+
+# =========================
+# DELETE RECORD
+# =========================
+
+@app.route("/api/records/<int:record_id>", methods=["DELETE"])
+@role_required("admin", "teacher")
+def delete_record(record_id):
+
+    connection = get_db_connection()
+
+    try:
+
+        record = connection.execute("""
+            SELECT * FROM records
+            WHERE id = ?
+        """, (record_id,)).fetchone()
+
+        if not record:
+            connection.close()
+
+            return jsonify({
+                "error": "Record not found."
+            }), 404
+
+        connection.execute("""
+            DELETE FROM records
+            WHERE id = ?
+        """, (record_id,))
+
+        connection.commit()
+
+        connection.close()
+
+        return jsonify({
+            "message": "Record deleted successfully."
+        }), 200
+
+    except Exception as error:
+
+        connection.rollback()
+        connection.close()
+
+        return jsonify({
+            "error": "Failed to delete record."
+        }), 500
     
 # =========================
 # GET RECORDS WITH SEARCH
